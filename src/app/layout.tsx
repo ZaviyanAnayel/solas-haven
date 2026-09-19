@@ -53,6 +53,13 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} dark h-full bg-black text-white antialiased`}
     >
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans selection:bg-amber-400/30 selection:text-amber-100 bg-black text-white">
         {children}
       </body>
