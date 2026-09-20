@@ -1,4 +1,4 @@
-export type LetterCategory = "grief" | "love" | "prayer" | "forgiveness" | "unsent";
+export type LetterCategory = "grief" | "love" | "confession" | "prayer" | "forgiveness" | "unsent";
 
 export interface Whisper {
   id: string;
@@ -64,6 +64,14 @@ export const CATEGORIES: CategoryInfo[] = [
     color: "#f43f5e",
     glowColor: "rgba(244, 63, 94, 0.5)",
     icon: "🌹"
+  },
+  {
+    id: "confession",
+    label: "My Confession",
+    description: "Deep anonymous confessions, secret burdens, and hidden truths released into starlight",
+    color: "#e879f9",
+    glowColor: "rgba(232, 121, 249, 0.55)",
+    icon: "🗝️"
   },
   {
     id: "prayer",

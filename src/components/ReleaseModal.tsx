@@ -141,6 +141,7 @@ export default function ReleaseModal({
     const sectorAngles: Record<LetterCategory, number> = {
       grief: (Math.PI * 5) / 4,
       love: (Math.PI * 7) / 4,
+      confession: (Math.PI * 3) / 4,
       prayer: Math.PI / 2,
       forgiveness: 0,
       unsent: Math.PI

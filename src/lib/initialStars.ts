@@ -312,5 +312,56 @@ export const INITIAL_LETTERS: Letter[] = [
     glowColor: "rgba(244, 63, 94, 0.9)",
     pulseSpeed: 0.9,
     pulsePhase: 2.1
+  },
+  {
+    id: "star-14",
+    recipient: "To Everyone Who Thinks I Have It All Together",
+    content: "I tell everyone I am doing fine, that the divorce didn't break me, and that I love my quiet new apartment. The truth is, I haven't cooked a warm meal in months. I leave the hallway light on because the silence at 2 AM is so heavy it makes my chest ache. I just want someone to hold me and tell me I am not a failure.",
+    category: "confession",
+    createdAt: "3 hours ago",
+    locationName: "Chicago, USA",
+    lightCount: 1640,
+    resonantLetterId: "star-15",
+    resonanceNote: "Two souls across continents admitting their hidden exhaustion and seeking gentleness.",
+    whispers: [
+      {
+        id: "w-c1",
+        text: "You are surviving something terrifying. You are not a failure for feeling tired.",
+        createdAt: "1 hour ago",
+        locationName: "Toronto, Canada"
+      }
+    ],
+    x: 180,
+    y: 320,
+    size: 4.5,
+    color: "#e879f9",
+    glowColor: "rgba(232, 121, 249, 0.75)",
+    pulseSpeed: 1.6,
+    pulsePhase: 0.7
+  },
+  {
+    id: "star-15",
+    recipient: "To My Younger Sister (Maya)",
+    content: "Ten years ago, I took the fifty dollars from your birthday card to pay for my bus ticket when I ran away. You cried and thought you had dropped it in the park grass. I've sent you expensive gifts every birthday since, but the guilt still eats at me every time you smile. I'm leaving this truth here because I'm still learning how to be brave.",
+    category: "confession",
+    createdAt: "5 hours ago",
+    locationName: "Brooklyn, New York",
+    lightCount: 2180,
+    resonantLetterId: "star-14",
+    whispers: [
+      {
+        id: "w-c2",
+        text: "Tell her one day. Love forgives the frightened things we did when we were young.",
+        createdAt: "2 hours ago",
+        locationName: "London, UK"
+      }
+    ],
+    x: -380,
+    y: -90,
+    size: 4.8,
+    color: "#e879f9",
+    glowColor: "rgba(232, 121, 249, 0.75)",
+    pulseSpeed: 1.4,
+    pulsePhase: 1.1
   }
 ];
