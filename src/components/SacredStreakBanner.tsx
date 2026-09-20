@@ -41,7 +41,7 @@ export default function SacredStreakBanner({
   return (
     <aside
       aria-label="Daily Presence Reminder"
-      className="fixed bottom-3 left-3 sm:bottom-6 sm:left-6 z-30 animate-fade-in pointer-events-auto"
+      className="fixed bottom-16 sm:bottom-24 left-3 sm:left-6 z-30 animate-fade-in pointer-events-auto"
     >
       <div className="relative rounded-2xl border border-amber-400/25 bg-black/90 backdrop-blur-2xl p-1.5 sm:p-3.5 shadow-2xl shadow-black/90 flex items-center justify-between gap-2 text-white max-w-[calc(100vw-6rem)] sm:max-w-md">
         {/* Left: Flame & Streak */}

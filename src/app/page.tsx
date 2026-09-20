@@ -15,11 +15,17 @@ import SacredStreakBanner from "../components/SacredStreakBanner";
 import UserProfileModal from "../components/UserProfileModal";
 import WhisperingWellModal from "../components/WhisperingWellModal";
 import AiFloatingOrb from "../components/AiFloatingOrb";
+import LibraryFloatingOrb from "../components/LibraryFloatingOrb";
 import CreatorIntelPulse from "../components/CreatorIntelPulse";
 import { useSoulProfile } from "../lib/useSoulProfile";
 import { INITIAL_LETTERS } from "../lib/initialStars";
 import { Letter, LetterCategory, Whisper } from "../lib/types";
 import { soundEngine } from "../lib/audio";
+import {
+  loadPersistedStars,
+  persistNewStar,
+  syncStarsToAllTiers,
+} from "../lib/starPersistence";
 
 const STORAGE_KEY = "letters_to_eternity_v1";
 const MY_STARS_KEY = "letters_to_eternity_my_stars_v1";
@@ -63,31 +69,16 @@ export default function HomePage() {
     fromLocation: string;
   } | null>(null);
 
-  // Load custom stars & userStarIds from localStorage on mount
+  // Load and recover custom stars across all storage tiers on mount
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          setLetters((prev) => {
-            const ids = new Set(parsed.map((p: Letter) => p.id));
-            const filteredInitial = prev.filter((p) => !ids.has(p.id));
-            return [...parsed, ...filteredInitial];
-          });
-        }
-      }
-
-      const savedMyStars = localStorage.getItem(MY_STARS_KEY);
-      if (savedMyStars) {
-        const parsedIds = JSON.parse(savedMyStars);
-        if (Array.isArray(parsedIds)) {
-          setUserStarIds(parsedIds);
-        }
-      }
-    } catch {
-      // ignore
-    }
+    loadPersistedStars(INITIAL_LETTERS)
+      .then(({ allStars, myStarIds }) => {
+        setLetters(allStars);
+        setUserStarIds(myStarIds);
+      })
+      .catch((err) => {
+        console.warn("Could not load persisted stars:", err);
+      });
   }, []);
 
   const hasShownWhisperNotificationRef = useRef(false);
@@ -142,18 +133,11 @@ export default function HomePage() {
 
     const updatedUserStars = [newLetter.id, ...userStarIds];
     setUserStarIds(updatedUserStars);
-
-    setLetters((prev) => [newLetter, ...prev]);
+    setLetters((prev) => [newLetter, ...prev.filter((l) => l.id !== newLetter.id)]);
     recordStarRelease();
 
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      const existing = saved ? JSON.parse(saved) : [];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([newLetter, ...existing]));
-      localStorage.setItem(MY_STARS_KEY, JSON.stringify(updatedUserStars));
-    } catch {
-      // ignore
-    }
+    // Multi-tier persistence shield (localStorage mirrors + IndexedDB)
+    persistNewStar(newLetter, true);
 
     // Open Celestial Blessing & Affirmation modal after star ascends
     setTimeout(() => {
@@ -171,9 +155,7 @@ export default function HomePage() {
       const updated = prev.map((l) =>
         l.id === id ? { ...l, lightCount: l.lightCount + 1 } : l
       );
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch {}
+      syncStarsToAllTiers(updated);
       return updated;
     });
 
@@ -194,9 +176,7 @@ export default function HomePage() {
         return l;
       });
 
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch {}
+      syncStarsToAllTiers(updated);
       return updated;
     });
 
@@ -252,6 +232,9 @@ export default function HomePage() {
 
       {/* Floating Starlight AI Companion Orb (Floating Bottom-Right with Circular Star Motion) */}
       <AiFloatingOrb onOpenAi={() => setIsWellOpen(true)} />
+
+      {/* Floating Sanctuary Library Orb (Floating Bottom-Left with Rotating Celestial Nebula) */}
+      <LibraryFloatingOrb />
 
       {/* Living 3D/Canvas Constellation with Earth Search, Depth Drift, Breath Scaling & Shooting Stars */}
       <ConstellationCanvas

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { LIBRARY_BOOKS, LibraryBook } from "../../lib/library/libraryData";
+import { LIBRARY_BOOKS, LIBRARY_ERAS, searchBooks } from "../../lib/library/libraryData";
 import {
   ArrowLeft,
   BookOpen,
@@ -12,45 +12,19 @@ import {
   Feather,
   ShieldCheck,
   ChevronRight,
-  Heart,
   Volume2,
   X,
-  Bookmark
+  Compass,
+  ScrollText
 } from "lucide-react";
 
-const CATEGORY_TABS = [
-  { label: "All Works", value: "All" },
-  { label: "Philosophy & Stoic Calm", value: "Stoic Calm & Resilience" },
-  { label: "Love & The Soul", value: "Love, Grief & The Soul" },
-  { label: "Solitude & Art", value: "Solitude, Art & Unspoken Longing" },
-  { label: "Grief & Mortality", value: "Grief, Time & Mortality" },
-  { label: "Prayers & Devotion", value: "Silent Prayers & Spiritual Solace" },
-  { label: "Stillness & Letting Go", value: "Stillness, Harmony & Letting Go" },
-  { label: "Unrequited Love", value: "Unrequited Love & Midnight Loneliness" },
-];
-
 export default function LibraryCatalogPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedEra, setSelectedEra] = useState<string>("All Eras");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredBooks = useMemo(() => {
-    return LIBRARY_BOOKS.filter((book) => {
-      const matchesCategory =
-        selectedCategory === "All" ||
-        book.category.toLowerCase().includes(selectedCategory.toLowerCase());
-
-      if (!matchesCategory) return false;
-
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase().trim();
-      return (
-        book.title.toLowerCase().includes(q) ||
-        book.author.toLowerCase().includes(q) ||
-        book.description.toLowerCase().includes(q) ||
-        book.quote.toLowerCase().includes(q)
-      );
-    });
-  }, [selectedCategory, searchQuery]);
+    return searchBooks(searchQuery, selectedEra);
+  }, [selectedEra, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#020204] text-white selection:bg-amber-400/30 selection:text-amber-100 font-sans">
@@ -77,20 +51,20 @@ export default function LibraryCatalogPage() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[11px] font-mono">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-              <span>US Public Domain • 100% Free</span>
+              <span>4000 BC to 1928 • 100% Free Public Domain</span>
             </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-14 px-4 sm:px-6 max-w-5xl mx-auto text-center">
+      <section className="relative overflow-hidden pt-12 pb-12 px-4 sm:px-6 max-w-5xl mx-auto text-center">
         {/* Subtle Ambient Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-amber-300 text-xs font-mono mb-4 animate-fade-in">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>The Sanctuary Library</span>
+          <span>The Sanctuary Library • Ancient Civilizations to Classical Masters</span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif tracking-tight text-white/95 leading-tight mb-4">
@@ -98,8 +72,7 @@ export default function LibraryCatalogPage() {
         </h1>
 
         <p className="text-sm sm:text-base text-white/60 max-w-2xl mx-auto leading-relaxed mb-8">
-          Complete, unabridged public-domain masterpieces. Free to read forever, paired with
-          restorative 432Hz ambient soundscapes and starlight quote reflection.
+          Complete, unabridged public-domain works spanning six millennia of human contemplation. Free to read forever, paired with continuous scroll reading and starlight quote reflection.
         </p>
 
         {/* Search Bar */}
@@ -109,8 +82,8 @@ export default function LibraryCatalogPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by title, author, or philosophy (e.g. Marcus Aurelius, Kahlil Gibran, Sorrow)..."
-            className="w-full pl-11 pr-10 py-3 rounded-2xl bg-white/[0.04] border border-white/15 text-sm text-white placeholder-white/40 focus:outline-none focus:border-amber-400/50 transition-all shadow-xl"
+            placeholder="Search 21 ancient & classic books (e.g. Gilgamesh, Ptahhotep, Rumi, Aurelius, Thoreau)..."
+            className="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-white/[0.04] border border-white/15 text-sm text-white placeholder-white/40 focus:outline-none focus:border-amber-400/50 transition-all shadow-xl"
           />
           {searchQuery && (
             <button
@@ -126,11 +99,15 @@ export default function LibraryCatalogPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 text-xs text-white/50 font-mono">
           <span className="flex items-center gap-1.5">
             <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-            8 Complete Volumes
+            {LIBRARY_BOOKS.length} Complete Unabridged Books
+          </span>
+          <span className="flex items-center gap-1.5">
+            <ScrollText className="w-3.5 h-3.5 text-cyan-400" />
+            Continuous Long-Scroll Reading
           </span>
           <span className="flex items-center gap-1.5">
             <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
-            432Hz Soothing Audio
+            432Hz Soothing Sanctuary Audio
           </span>
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
@@ -139,22 +116,26 @@ export default function LibraryCatalogPage() {
         </div>
       </section>
 
-      {/* Category Tabs */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
+      {/* Era Navigation Pills */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-8">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-white/10">
-          {CATEGORY_TABS.map((tab) => {
-            const isActive = selectedCategory === tab.value;
+          <div className="flex items-center gap-1.5 text-xs text-white/40 font-mono pr-2">
+            <Compass className="w-3.5 h-3.5 text-amber-400/70" />
+            <span>Eras:</span>
+          </div>
+          {LIBRARY_ERAS.map((era) => {
+            const isActive = selectedEra === era;
             return (
               <button
-                key={tab.value}
-                onClick={() => setSelectedCategory(tab.value)}
-                className={`shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+                key={era}
+                onClick={() => setSelectedEra(era)}
+                className={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                   isActive
                     ? "bg-amber-400/20 border border-amber-400/50 text-amber-200 shadow-md shadow-amber-500/10"
                     : "bg-white/[0.03] border border-white/5 text-white/60 hover:text-white hover:bg-white/[0.07]"
                 }`}
               >
-                {tab.label}
+                {era}
               </button>
             );
           })}
@@ -163,17 +144,29 @@ export default function LibraryCatalogPage() {
 
       {/* Book Catalog Grid */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="mb-4 flex items-center justify-between text-xs text-white/40 font-mono">
+          <span>Showing {filteredBooks.length} of {LIBRARY_BOOKS.length} masterworks</span>
+          {selectedEra !== "All Eras" && (
+            <button
+              onClick={() => setSelectedEra("All Eras")}
+              className="text-amber-300 hover:underline"
+            >
+              Clear Era Filter
+            </button>
+          )}
+        </div>
+
         {filteredBooks.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl p-8">
             <BookOpen className="w-10 h-10 text-white/20 mx-auto mb-3" />
             <h3 className="font-serif text-lg text-white/80">No books match your search</h3>
             <p className="text-xs text-white/40 mt-1 max-w-md mx-auto">
-              Try searching for "Aurelius", "Gibran", "Rilke", "Seneca", or clear the filter.
+              Try searching for "Gilgamesh", "Ptahhotep", "Rumi", "Aurelius", "Thoreau", or reset filters.
             </p>
             <button
               onClick={() => {
                 setSearchQuery("");
-                setSelectedCategory("All");
+                setSelectedEra("All Eras");
               }}
               className="mt-4 px-4 py-2 rounded-xl bg-amber-400/20 border border-amber-400/40 text-amber-200 text-xs hover:bg-amber-400/30 transition-all"
             >
@@ -219,7 +212,7 @@ export default function LibraryCatalogPage() {
                     </p>
 
                     {/* Featured Quote Block */}
-                    <div className="p-3.5 rounded-2xl bg-white/[0.02] border-l-2 border-amber-400/60 text-white/80 italic text-xs font-serif leading-relaxed">
+                    <div className="p-3.5 rounded-2xl bg-white/[0.02] border-l-2 border-amber-400/60 text-white/80 italic text-xs font-serif leading-relaxed line-clamp-3">
                       "{book.quote}"
                     </div>
                   </div>
@@ -232,7 +225,7 @@ export default function LibraryCatalogPage() {
                         {book.readTime}
                       </span>
                       <span>•</span>
-                      <span>{book.chapters.length} Chapters</span>
+                      <span>{book.chapters.length} Sections</span>
                     </div>
 
                     <Link

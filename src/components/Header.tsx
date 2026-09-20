@@ -100,9 +100,9 @@ export default function Header({
     <header className="fixed top-0 left-0 right-0 z-30 pointer-events-none">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 py-3 sm:py-4 flex flex-col gap-2.5">
         {/* Top Bar: Brand, Counter, Tools */}
-        <div className="flex items-center justify-between pointer-events-auto">
+        <div className="relative flex items-center justify-between pointer-events-auto w-full">
           {/* Logo & Vision */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 z-10">
             <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-amber-400/15 via-amber-500/5 to-purple-500/10 border border-amber-300/30 backdrop-blur-xl shadow-xl shadow-amber-500/15 group">
               <svg viewBox="0 0 40 40" fill="none" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-700 group-hover:scale-110">
                 <defs>
@@ -168,8 +168,8 @@ export default function Header({
             </div>
           </div>
 
-          {/* Center Navigation Capsule (Clean Apple / Vercel style) */}
-          <nav className="hidden xl:flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-2xl shadow-lg shadow-black/40 shrink-0">
+          {/* Center Navigation Capsule (Perfect Absolute Centering) */}
+          <nav className="hidden xl:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-2xl shadow-lg shadow-black/40 shrink-0 z-20">
             <Link
               href="/chronicles"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap shrink-0"
@@ -456,8 +456,8 @@ export default function Header({
           </div>
         )}
 
-        {/* Category Pills (Sub-Nav) */}
-        <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-1 scrollbar-none">
+        {/* Category Pills (Sub-Nav - Centered on Desktop) */}
+        <div className="pointer-events-auto flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 overflow-x-auto py-1 scrollbar-none w-full">
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
