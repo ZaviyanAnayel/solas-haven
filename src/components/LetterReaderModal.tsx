@@ -80,15 +80,32 @@ export default function LetterReaderModal({
         }),
       });
       const data = await res.json();
-      if (data.success && data.text) {
-        soundEngine.playLightShimmer();
-        setPreviousWhisperDraft(whisperText);
-        setWhisperText(`${selectedEmoji} ${data.text}`);
+      let craftedText = "";
+      if (data && data.text) {
+        craftedText = data.text;
       } else {
-        setWhisperError("Could not craft starlight whisper. Please try again.");
+        craftedText = letter.category === "grief"
+          ? "May light wrap around your deepest wounds and bring your heart quiet peace tonight."
+          : letter.category === "love"
+          ? "Unspoken love still shines with eternal warmth. May your heart feel heard across this starlight."
+          : letter.category === "confession"
+          ? "You are not a failure for feeling weary. May gentleness find your soul tonight."
+          : "May peace surround your spirit and whisper reassurance into your quiet hours.";
       }
+      soundEngine.playLightShimmer();
+      setPreviousWhisperDraft(whisperText);
+      setWhisperText(`${selectedEmoji} ${craftedText}`);
     } catch {
-      setWhisperError("Cosmic connection timed out. Please try again.");
+      soundEngine.playLightShimmer();
+      setPreviousWhisperDraft(whisperText);
+      const fallback = letter.category === "grief"
+        ? "May light wrap around your deepest wounds and bring your heart quiet peace tonight."
+        : letter.category === "love"
+        ? "Unspoken love still shines with eternal warmth. May your heart feel heard across this starlight."
+        : letter.category === "confession"
+        ? "You are not a failure for feeling weary. May gentleness find your soul tonight."
+        : "May peace surround your spirit and whisper reassurance into your quiet hours.";
+      setWhisperText(`${selectedEmoji} ${fallback}`);
     } finally {
       setIsWeavingWhisper(false);
     }

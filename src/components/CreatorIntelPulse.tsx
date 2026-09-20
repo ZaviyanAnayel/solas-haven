@@ -9,14 +9,76 @@ import {
 } from "../lib/guardianEngine";
 import CreatorIntelModal from "./CreatorIntelModal";
 
+const CREATOR_STORAGE_KEY = "solas_creator_mode_authorized_v2";
+
 export default function CreatorIntelPulse() {
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [incidents, setIncidents] = useState<GuardianIncident[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [hasDismissedToast, setHasDismissedToast] = useState(false);
 
+  // Authenticate Creator Zaviyan only
+  useEffect(() => {
+    let auth = false;
+    try {
+      if (localStorage.getItem(CREATOR_STORAGE_KEY) === "true") {
+        auth = true;
+      }
+    } catch {}
+
+    // Check secret URL param: ?operator=zaviyan or ?creator=zaviyan or ?admin=solas777
+    if (typeof window !== "undefined") {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const op = urlParams.get("operator") || urlParams.get("creator") || urlParams.get("admin");
+        if (op === "zaviyan" || op === "solas777" || urlParams.has("zaviyan")) {
+          auth = true;
+          try {
+            localStorage.setItem(CREATOR_STORAGE_KEY, "true");
+          } catch {}
+          // Clean URL without reload
+          const cleanUrl = window.location.pathname + window.location.hash;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+      } catch {}
+    }
+
+    setIsAuthorized(auth);
+
+    // Secret Keybind: Ctrl + Shift + Z to unlock / toggle
+    const handleKeybind = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "Z" || e.key === "z")) {
+        e.preventDefault();
+        const input = prompt("Sanctuary Security — Enter Creator Key:");
+        if (input === "zaviyan" || input === "solas777") {
+          try {
+            localStorage.setItem(CREATOR_STORAGE_KEY, "true");
+          } catch {}
+          setIsAuthorized(true);
+          alert("Sentinel Intel Unlocked. Welcome, Creator Zaviyan.");
+        } else if (input !== null) {
+          alert("Access Denied.");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeybind);
+    return () => window.removeEventListener("keydown", handleKeybind);
+  }, []);
+
+  const handleLockCreatorMode = () => {
+    try {
+      localStorage.removeItem(CREATOR_STORAGE_KEY);
+    } catch {}
+    setIsAuthorized(false);
+    setIsModalOpen(false);
+    setShowToast(false);
+  };
+
   const refreshData = () => {
+    if (!isAuthorized) return;
     const list = getGuardianIncidents();
     setIncidents(list);
     const unread = getUnreadIncidentCount();
@@ -27,6 +89,7 @@ export default function CreatorIntelPulse() {
   };
 
   useEffect(() => {
+    if (!isAuthorized) return;
     refreshData();
 
     // Listen for custom events dispatched by guardianEngine
@@ -47,7 +110,12 @@ export default function CreatorIntelPulse() {
       window.removeEventListener("solas-guardian-incident-logged", handleLogged);
       window.removeEventListener("solas-guardian-incidents-read", handleRead);
     };
-  }, [hasDismissedToast]);
+  }, [hasDismissedToast, isAuthorized]);
+
+  // NEVER render anything if not authorized!
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <>
@@ -120,6 +188,7 @@ export default function CreatorIntelPulse() {
         onClose={() => setIsModalOpen(false)}
         incidents={incidents}
         onRefresh={refreshData}
+        onLockCreatorMode={handleLockCreatorMode}
       />
     </>
   );

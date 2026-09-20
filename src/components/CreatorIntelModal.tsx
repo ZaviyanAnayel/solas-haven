@@ -14,6 +14,7 @@ import {
   FileText,
   X,
   ExternalLink,
+  Lock,
 } from "lucide-react";
 import {
   GuardianIncident,
@@ -28,6 +29,7 @@ interface CreatorIntelModalProps {
   onClose: () => void;
   incidents: GuardianIncident[];
   onRefresh: () => void;
+  onLockCreatorMode?: () => void;
 }
 
 export default function CreatorIntelModal({
@@ -35,6 +37,7 @@ export default function CreatorIntelModal({
   onClose,
   incidents,
   onRefresh,
+  onLockCreatorMode,
 }: CreatorIntelModalProps) {
   const [filter, setFilter] = useState<"ALL" | "BULLYING" | "DARK_CONFESSION">("ALL");
 
@@ -101,12 +104,25 @@ export default function CreatorIntelModal({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            {onLockCreatorMode && (
+              <button
+                type="button"
+                onClick={onLockCreatorMode}
+                className="px-2.5 py-1 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-[11px] font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Lock & hide Sentinel Intel so it disappears completely from this browser"
+              >
+                <Lock className="w-3 h-3" />
+                <span>Lock Sentinel</span>
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Action Controls & Filters */}

@@ -10,15 +10,18 @@ async function callGroq(
   messages: Array<{ role: string; content: string }>,
   maxTokens = 450,
   temperature = 0.72
-) {
+): Promise<string | null> {
   if (!GROQ_API_KEY) {
-    throw new Error("GROQ_API_KEY is not configured.");
+    return null;
   }
 
-  // Attempt primary model
+  // Attempt primary model with 7s timeout
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
+      signal: controller.signal,
       headers: {
         Authorization: `Bearer ${GROQ_API_KEY}`,
         "Content-Type": "application/json",
@@ -30,6 +33,7 @@ async function callGroq(
         temperature,
       }),
     });
+    clearTimeout(timeout);
 
     if (res.ok) {
       const data = await res.json();
@@ -40,28 +44,73 @@ async function callGroq(
     console.warn("Primary Groq model error, trying fallback:", err);
   }
 
-  // Fallback model attempt
-  const fallbackRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${GROQ_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: FALLBACK_MODEL,
-      messages,
-      max_tokens: maxTokens,
-      temperature,
-    }),
-  });
+  // Fallback model attempt with 7s timeout
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
+    const fallbackRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: FALLBACK_MODEL,
+        messages,
+        max_tokens: maxTokens,
+        temperature,
+      }),
+    });
+    clearTimeout(timeout);
 
-  if (!fallbackRes.ok) {
-    const errorText = await fallbackRes.text();
-    throw new Error(`Groq API error: ${errorText}`);
+    if (fallbackRes.ok) {
+      const fallbackData = await fallbackRes.json();
+      const content = fallbackData.choices?.[0]?.message?.content?.trim();
+      if (content) return content;
+    }
+  } catch (err) {
+    console.warn("Fallback Groq model error:", err);
   }
 
-  const fallbackData = await fallbackRes.json();
-  return fallbackData.choices?.[0]?.message?.content?.trim() || "";
+  return null;
+}
+
+function cleanAiText(text: string): string {
+  return text
+    .replace(/^["'“”‘]+|["'“”‘]+$/g, "")
+    .replace(/^(Here is (a|the) (whisper|letter|echo|story):\s*)/i, "")
+    .trim();
+}
+
+function getProceduralWhisper(recipient?: string, starLetter?: string, userDraft?: string): string {
+  if (userDraft && userDraft.trim().length > 3) {
+    const d = userDraft.trim();
+    if (!/[.!?]$/.test(d)) return `${d}. May this starlight bring comfort to your heart.`;
+    return d;
+  }
+
+  const pool = [
+    "May peace surround your deepest wounds, and may your unspoken truth find warmth in the stars tonight.",
+    "You are not alone in this silence. Every word you withheld is honored and held gently here.",
+    "May the distance between your aching heart and peace become gentle and light tonight.",
+    "You are surviving something terrifying. You are never a failure for feeling weary.",
+    "What was never said still has sacred meaning. May gentle rest find you beneath this sky.",
+    "Holding quiet space for your sorrow tonight. May morning bring a softer breath.",
+    "I hear the ache between your words. May quiet grace settle upon your shoulders tonight.",
+    "May the love you carry outlive the sorrow, shining like an eternal star."
+  ];
+
+  const seed = (String(recipient || "") + String(starLetter || "")).length;
+  return pool[seed % pool.length];
+}
+
+function getProceduralWeave(rawText: string, recipient?: string, category?: string): string {
+  const clean = rawText.trim().replace(/\s+/g, " ");
+  if (clean.length > 30) {
+    return clean;
+  }
+  return `To ${recipient || "Someone I Carry in Silence"}: In the quiet hours of tonight, this truth refuses to stay buried. I release what was never said into starlight, trusting that peace will finally find both of our hearts.`;
 }
 
 const SOLAS_SANCTUARY_KNOWLEDGE = `
@@ -139,16 +188,20 @@ Raw thought: "${rawText.trim()}"
 
 Weave this into a poetic starlight letter:`;
 
-      const result = await callGroq(
-        [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        350,
-        0.75
-      );
+      let result: string | null = null;
+      try {
+        result = await callGroq(
+          [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          350,
+          0.75
+        );
+      } catch {}
 
-      return NextResponse.json({ success: true, text: result });
+      const finalText = result ? cleanAiText(result) : getProceduralWeave(rawText, recipient, category);
+      return NextResponse.json({ success: true, text: finalText });
     }
 
     // 2. Celestial Echo: Bespoke cosmic acknowledgment for a released star
@@ -175,16 +228,20 @@ Content: "${letterText.trim().slice(0, 500)}"
 
 Echo from the Cosmos:`;
 
-      const result = await callGroq(
-        [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        160,
-        0.7
-      );
+      let result: string | null = null;
+      try {
+        result = await callGroq(
+          [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          160,
+          0.7
+        );
+      } catch {}
 
-      return NextResponse.json({ success: true, echo: result, text: result });
+      const finalEcho = result ? cleanAiText(result) : "Your words have ascended beyond pain into permanent starlight. You are witnessed, and your soul is held gently in this sacred cosmos.";
+      return NextResponse.json({ success: true, echo: finalEcho, text: finalEcho });
     }
 
     // 3. The Whispering Well / Solas AI Companion dialogue
@@ -220,8 +277,13 @@ You are in active dialogue with a human soul. They may be carrying a heavy secre
         ...conversationMessages,
       ];
 
-      const result = await callGroq(fullMessages, 350, 0.72);
-      return NextResponse.json({ success: true, reply: result, text: result });
+      let result: string | null = null;
+      try {
+        result = await callGroq(fullMessages, 350, 0.72);
+      } catch {}
+
+      const finalReply = result ? cleanAiText(result) : "I hear every word you carry, and I receive your truth without judgment. In this sanctuary, you do not have to be strong or pretend. Breathe slowly with me—your presence here is sacred.";
+      return NextResponse.json({ success: true, reply: finalReply, text: finalReply });
     }
 
     // 4. Craft Whisper: AI assistant for writing a gentle blessing/whisper to a star
@@ -242,16 +304,20 @@ User's thoughts/draft: "${String(userDraft || "").slice(0, 150)}"
 
 Craft a gentle starlight whisper:`;
 
-      const result = await callGroq(
-        [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        120,
-        0.7
-      );
+      let result: string | null = null;
+      try {
+        result = await callGroq(
+          [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          120,
+          0.7
+        );
+      } catch {}
 
-      return NextResponse.json({ success: true, text: result });
+      const finalWhisper = result ? cleanAiText(result) : getProceduralWhisper(recipient, starLetter, userDraft);
+      return NextResponse.json({ success: true, text: finalWhisper });
     }
 
     // 5. Weave Story: AI muse for writing long chronicles & memoirs
@@ -278,16 +344,20 @@ Raw story draft:
 
 Weave into an authentic, timeless memoir:`;
 
-      const result = await callGroq(
-        [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        600,
-        0.73
-      );
+      let result: string | null = null;
+      try {
+        result = await callGroq(
+          [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          600,
+          0.73
+        );
+      } catch {}
 
-      return NextResponse.json({ success: true, text: result });
+      const finalStory = result ? cleanAiText(result) : rawStory.trim();
+      return NextResponse.json({ success: true, text: finalStory });
     }
 
     // 6. Guardian Inspect: Sanctuary Sentinel content analysis & ethical discernment
@@ -353,6 +423,10 @@ Evaluate and return JSON:`;
           0.2
         );
 
+        if (!rawResult) {
+          throw new Error("Groq unavailable, using local reverence check");
+        }
+
         // Clean json markdown wrappers if any
         const cleaned = rawResult
           .replace(/^```json\s*/i, "")
@@ -393,11 +467,12 @@ Evaluate and return JSON:`;
 
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Cosmic connection timed out. Please try again.";
-    console.error("API /api/ai error:", error);
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    console.error("API /api/ai fallback triggered:", error);
+    return NextResponse.json({
+      success: true,
+      text: "May peace surround your deepest wounds, and may your unspoken truth find warmth in the stars tonight.",
+      reply: "I hear you, and I receive your words with gentle grace. Take a slow, quiet breath with me.",
+      echo: "Your words have ascended into starlight. You are witnessed, and your heart is held in peace.",
+    });
   }
 }
