@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Terms of Service | Solas Haven",
   description: "Terms and conditions of sanctuary use for Solas Haven, operated by Zaviyan.",
   alternates: {
-    canonical: "https://solashaven.com/terms",
+    canonical: "https://www.solashaven.com/terms",
   },
 };
 

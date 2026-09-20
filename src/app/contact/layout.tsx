@@ -5,12 +5,12 @@ export const metadata: Metadata = {
   description:
     "Get in touch with the Solas Haven Sanctuary and Zaviyan ethics team for support, star removal requests, or general inquiries.",
   alternates: {
-    canonical: "https://solashaven.com/contact",
+    canonical: "https://www.solashaven.com/contact",
   },
   openGraph: {
     title: "Contact & Sanctuary Ethics Desk | Solas Haven",
     description: "Support, ethics desk, and inquiries for the Solas Haven Sanctuary.",
-    url: "https://solashaven.com/contact",
+    url: "https://www.solashaven.com/contact",
   },
 };
 

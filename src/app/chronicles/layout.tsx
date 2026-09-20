@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     "solas haven chronicles",
   ],
   alternates: {
-    canonical: "https://solashaven.com/chronicles",
+    canonical: "https://www.solashaven.com/chronicles",
   },
   openGraph: {
     title: "Chronicles of Light & Memory | Solas Haven",
     description:
       "A sacred sanctuary archive of true human letters, grief reflections, and silent prayers across 195+ nations.",
-    url: "https://solashaven.com/chronicles",
+    url: "https://www.solashaven.com/chronicles",
     siteName: "Solas Haven",
     type: "website",
   },

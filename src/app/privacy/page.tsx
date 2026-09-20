@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy | Solas Haven",
   description: "Official Privacy Policy for Solas Haven, operated by Zaviyan.",
   alternates: {
-    canonical: "https://solashaven.com/privacy",
+    canonical: "https://www.solashaven.com/privacy",
   },
 };
 

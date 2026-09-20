@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Frequently Asked Questions | Solas Haven",
   description: "Comprehensive guidance, privacy assurances, and scientific foundations of the Solas Haven emotional sanctuary.",
   alternates: {
-    canonical: "https://solashaven.com/faq",
+    canonical: "https://www.solashaven.com/faq",
   },
 };
 

@@ -3,7 +3,7 @@ import { INITIAL_LETTERS } from "../lib/initialStars";
 import { CHRONICLES } from "../lib/chroniclesData";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://solashaven.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.solashaven.com";
 
   // Core Static Pages
   const staticRoutes: MetadataRoute.Sitemap = [

@@ -41,7 +41,7 @@ export async function generateMetadata({
     title: `${article.title} | Solas Haven`,
     description: article.excerpt,
     alternates: {
-      canonical: `https://solashaven.com/chronicles/${slug}`,
+      canonical: `https://www.solashaven.com/chronicles/${slug}`,
     },
     openGraph: {
       title: article.title,
@@ -80,7 +80,7 @@ export default async function ChronicleDetailPage({
     "publisher": {
       "@type": "Organization",
       "name": "Solas Haven",
-      "url": "https://solashaven.com"
+      "url": "https://www.solashaven.com"
     }
   };
 

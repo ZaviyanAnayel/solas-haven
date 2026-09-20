@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://solashaven.com"),
+  metadataBase: new URL("https://www.solashaven.com"),
   title: {
     default: "Solas Haven | The Celestial Sanctuary of Unspoken Words & Silent Prayers",
     template: "%s | Solas Haven",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     "vagus nerve relaxation",
     "sacred digital space",
   ],
-  authors: [{ name: "Solas Haven Sanctuary", url: "https://solashaven.com" }],
+  authors: [{ name: "Solas Haven Sanctuary", url: "https://www.solashaven.com" }],
   creator: "Zaviyan",
   publisher: "Solas Haven",
   formatDetection: {
@@ -83,13 +83,13 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: "https://solashaven.com",
+    canonical: "https://www.solashaven.com",
   },
   openGraph: {
     title: "Solas Haven | The Celestial Sanctuary of Unspoken Words & Silent Prayers",
     description:
       "Where unspoken grief, unsaid goodbyes, and silent prayers become permanent stars in a living 3D cosmos across 195+ nations.",
-    url: "https://solashaven.com",
+    url: "https://www.solashaven.com",
     siteName: "Solas Haven",
     locale: "en_US",
     type: "website",
@@ -127,7 +127,7 @@ export default function RootLayout({
     "@type": "WebSite",
     "name": "Solas Haven",
     "alternateName": ["SolasHaven", "Solas Haven Sanctuary", "Letters to Eternity"],
-    "url": "https://solashaven.com",
+    "url": "https://www.solashaven.com",
     "description": "The sacred celestial cosmos of unspoken words, silent prayers, and emotional catharsis.",
     "inLanguage": "en-US",
   };
@@ -136,8 +136,8 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Solas Haven",
-    "url": "https://solashaven.com",
-    "logo": "https://solashaven.com/globe.svg",
+    "url": "https://www.solashaven.com",
+    "logo": "https://www.solashaven.com/globe.svg",
     "founder": {
       "@type": "Person",
       "name": "Zaviyan",
