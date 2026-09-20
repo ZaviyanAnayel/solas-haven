@@ -6,6 +6,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About the Sanctuary | Solas Haven",
   description: "The architecture, psychology, and ethical mission behind Solas Haven, governed by Zaviyan.",
+  alternates: {
+    canonical: "https://solashaven.com/about",
+  },
 };
 
 export default function AboutPage() {

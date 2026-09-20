@@ -29,6 +29,9 @@ export async function generateMetadata({
   return {
     title: `${letter.recipient} | Solas Haven`,
     description: `"${letter.content.slice(0, 150)}..." - A permanent star in the Solas Haven celestial sanctuary.`,
+    alternates: {
+      canonical: `https://solashaven.com/letter/${id}`,
+    },
     openGraph: {
       title: `${letter.recipient} - Solas Haven`,
       description: `"${letter.content.slice(0, 150)}..."`,

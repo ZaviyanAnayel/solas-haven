@@ -21,34 +21,98 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Solas Haven - The Celestial Sanctuary of Unspoken Words",
+  metadataBase: new URL("https://solashaven.com"),
+  title: {
+    default: "Solas Haven | The Celestial Sanctuary of Unspoken Words & Silent Prayers",
+    template: "%s | Solas Haven",
+  },
   description:
-    "Solas Haven is a sacred digital cosmos where unspoken grief, unsaid goodbyes, and silent prayers ascend into permanent starlight.",
+    "Solas Haven is a sacred, anonymous digital cosmos where unspoken grief, unsaid goodbyes, secret confessions, and silent prayers ascend into permanent starlight across 195+ nations.",
+  applicationName: "Solas Haven",
   keywords: [
+    // Brand & Identity
     "solas haven",
     "solashaven",
+    "solas haven sanctuary",
     "sanctuary of light",
-    "unspoken words",
-    "silent prayers",
-    "grief healing",
+    "letters to eternity",
+    // Letters to Heaven & Grief
     "letters to heaven",
-    "catharsis",
-    "spiritual sanctuary",
-    "anonymous healing",
+    "letters to heaven online",
+    "letters to deceased loved ones",
+    "letters to lost loved ones",
+    "write to heaven",
+    "grief healing",
+    "grief healing community",
+    "bereavement support online",
+    "coping with grief and loss",
+    "unspoken grief",
+    "child loss memorial",
+    "pet loss memorial online",
+    "digital memorial wall",
+    "online memorial star",
+    "grief therapy writing",
+    // Unspoken Words & Unsent Letters
+    "unsent letters",
+    "unsent letters project",
+    "unspoken words",
+    "unsaid goodbyes",
+    "things i never told you",
+    "unrequited love letters",
+    "letters to my ex",
+    "secret confessions",
+    "anonymous confession wall",
+    "expressive writing healing",
+    "emotional catharsis platform",
+    // Silent Prayers & Spiritual Healing
+    "silent prayers",
+    "online prayer wall",
+    "anonymous prayer requests",
+    "spiritual solace",
+    "peaceful sanctuary",
+    "432hz sound healing",
+    "vagus nerve relaxation",
+    "sacred digital space",
   ],
-  authors: [{ name: "Solas Haven Sanctuary" }],
+  authors: [{ name: "Solas Haven Sanctuary", url: "https://solashaven.com" }],
+  creator: "Zaviyan",
+  publisher: "Solas Haven",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "https://solashaven.com",
+  },
   openGraph: {
-    title: "Solas Haven - The Celestial Sanctuary of Unspoken Words",
+    title: "Solas Haven | The Celestial Sanctuary of Unspoken Words & Silent Prayers",
     description:
-      "Where unsaid goodbyes, silent prayers, and secret truths become permanent stars in a living 3D cosmos.",
+      "Where unspoken grief, unsaid goodbyes, and silent prayers become permanent stars in a living 3D cosmos across 195+ nations.",
+    url: "https://solashaven.com",
+    siteName: "Solas Haven",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Solas Haven - Sanctuary of Light",
+    title: "Solas Haven | The Celestial Sanctuary of Unspoken Words",
     description:
-      "Where silent prayers and unsaid words become permanent stars in the cosmos.",
+      "Where unsaid goodbyes, silent prayers, and secret truths become permanent stars in a living cosmos.",
+    creator: "@solashaven",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  category: "Emotional & Spiritual Well-being",
 };
 
 import Script from "next/script";
@@ -58,6 +122,33 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Solas Haven",
+    "alternateName": ["SolasHaven", "Solas Haven Sanctuary", "Letters to Eternity"],
+    "url": "https://solashaven.com",
+    "description": "The sacred celestial cosmos of unspoken words, silent prayers, and emotional catharsis.",
+    "inLanguage": "en-US",
+  };
+
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Solas Haven",
+    "url": "https://solashaven.com",
+    "logo": "https://solashaven.com/globe.svg",
+    "founder": {
+      "@type": "Person",
+      "name": "Zaviyan",
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "business@zaviyanllc.com",
+      "contactType": "Support & Ethics Desk",
+    },
+  };
+
   return (
     <html
       lang="en"
@@ -65,6 +156,14 @@ export default function RootLayout({
     >
       <head>
         <meta name="google-site-verification" content="google042113ed54845edd" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"

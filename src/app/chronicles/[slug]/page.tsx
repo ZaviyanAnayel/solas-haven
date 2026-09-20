@@ -40,6 +40,9 @@ export async function generateMetadata({
   return {
     title: `${article.title} | Solas Haven`,
     description: article.excerpt,
+    alternates: {
+      canonical: `https://solashaven.com/chronicles/${slug}`,
+    },
     openGraph: {
       title: article.title,
       description: article.excerpt,
