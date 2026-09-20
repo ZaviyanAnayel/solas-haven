@@ -98,13 +98,13 @@ export default function Header({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-30 pointer-events-none">
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 py-3 sm:py-4 flex flex-col gap-2.5">
-        {/* Top Bar: Brand, Counter, Tools */}
-        <div className="relative flex items-center justify-between pointer-events-auto w-full">
+      <div className="mx-auto w-full max-w-[1700px] px-3 sm:px-6 py-2.5 sm:py-3.5 flex flex-col gap-2 sm:gap-2.5">
+        {/* Top Bar: Brand, Navigation, Tools */}
+        <div className="flex items-center justify-between pointer-events-auto w-full gap-2 sm:gap-4">
           {/* Logo & Vision */}
-          <div className="flex items-center gap-2.5 sm:gap-3 z-10">
-            <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-amber-400/15 via-amber-500/5 to-purple-500/10 border border-amber-300/30 backdrop-blur-xl shadow-xl shadow-amber-500/15 group">
-              <svg viewBox="0 0 40 40" fill="none" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-700 group-hover:scale-110">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-amber-400/15 via-amber-500/5 to-purple-500/10 border border-amber-300/30 backdrop-blur-xl shadow-xl shadow-amber-500/15 group">
+              <svg viewBox="0 0 40 40" fill="none" className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-700 group-hover:scale-110">
                 <defs>
                   <linearGradient id="solasGold" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#FDE68A" />
@@ -148,13 +148,13 @@ export default function Header({
             </div>
             <div className="shrink-0">
               <div className="flex items-center gap-2">
-                <span className="font-semibold tracking-[0.14em] uppercase text-white/95 text-[14px] sm:text-[16px] font-serif">
+                <span className="font-semibold tracking-[0.14em] uppercase text-white/95 text-[14px] sm:text-[15px] font-serif">
                   Solas Haven
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-0.5 text-[10px] sm:text-[11px] text-white/50 font-light">
-                <span className="hidden sm:inline">Where unspoken words find peace</span>
-                <span className="hidden sm:inline text-white/20">•</span>
+                <span className="hidden md:inline">Where unspoken words find peace</span>
+                <span className="hidden md:inline text-white/20">•</span>
                 <button
                   type="button"
                   onClick={onOpenPrivacyModal}
@@ -168,77 +168,99 @@ export default function Header({
             </div>
           </div>
 
-          {/* Center Navigation Capsule (Perfect Absolute Centering) */}
-          <nav className="hidden xl:flex absolute left-1/2 -translate-x-1/2 items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-2xl shadow-lg shadow-black/40 shrink-0 z-20">
-            <Link
-              href="/chronicles"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap shrink-0"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-amber-300" />
-              <span>Chronicles</span>
-            </Link>
+          {/* Center Navigation: Responsive & Collision-Free (Never Overlaps) */}
+          <div className="hidden lg:flex items-center justify-center shrink-0">
+            {/* Full Expanded Nav on Ultra-wide (2xl >= 1536px) */}
+            <nav className="hidden 2xl:flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-2xl shadow-lg shadow-black/40">
+              <Link
+                href="/chronicles"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-300" />
+                <span>Chronicles</span>
+              </Link>
 
-            <Link
-              href="/library"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap shrink-0"
-            >
-              <Bookmark className="w-3.5 h-3.5 text-amber-400" />
-              <span>Library</span>
-            </Link>
+              <Link
+                href="/library"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
+              >
+                <Bookmark className="w-3.5 h-3.5 text-amber-400" />
+                <span>Library</span>
+              </Link>
 
-            {onOpenVigil && (
+              {onOpenVigil && (
+                <button
+                  type="button"
+                  onClick={onOpenVigil}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-amber-200/90 hover:text-amber-200 hover:bg-amber-400/15 transition-all whitespace-nowrap cursor-pointer"
+                  title="Hold Global Silent Vigil"
+                >
+                  <Flame className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Vigil</span>
+                </button>
+              )}
+
+              {onOpenBreath && (
+                <button
+                  type="button"
+                  onClick={onOpenBreath}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-sky-200/90 hover:text-sky-200 hover:bg-sky-400/15 transition-all whitespace-nowrap cursor-pointer"
+                  title="Somatic Grounding Breath"
+                >
+                  <Wind className="w-3.5 h-3.5 text-sky-300" />
+                  <span>Breathe</span>
+                </button>
+              )}
+
+              {onOpenWell && (
+                <button
+                  type="button"
+                  onClick={onOpenWell}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-amber-200/90 hover:text-amber-200 hover:bg-amber-400/15 transition-all whitespace-nowrap cursor-pointer"
+                  title="Talk with Solas (Sanctuary AI)"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                  <span>Let&apos;s Talk</span>
+                </button>
+              )}
+
               <button
                 type="button"
-                onClick={onOpenVigil}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-amber-200/90 hover:text-amber-200 hover:bg-amber-400/15 transition-all whitespace-nowrap shrink-0 cursor-pointer"
-                title="Hold Global Silent Vigil"
+                onClick={onWander}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-indigo-200/90 hover:text-indigo-200 hover:bg-indigo-400/15 transition-all whitespace-nowrap cursor-pointer"
+                title="Wander to a random star"
               >
-                <Flame className="w-3.5 h-3.5 text-amber-400" />
-                <span>Vigil</span>
+                <Compass className="w-3.5 h-3.5 text-indigo-300" />
+                <span>Wander</span>
               </button>
-            )}
 
-            {onOpenBreath && (
-              <button
-                type="button"
-                onClick={onOpenBreath}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-sky-200/90 hover:text-sky-200 hover:bg-sky-400/15 transition-all whitespace-nowrap shrink-0 cursor-pointer"
-                title="Somatic Grounding Breath"
+              <Link
+                href="/about"
+                className="px-3 py-1.5 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
               >
-                <Wind className="w-3.5 h-3.5 text-sky-300" />
-                <span>Breathe</span>
-              </button>
-            )}
+                About
+              </Link>
+            </nav>
 
-            {onOpenWell && (
-              <button
-                type="button"
-                onClick={onOpenWell}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-amber-200/90 hover:text-amber-200 hover:bg-amber-400/15 transition-all whitespace-nowrap shrink-0 cursor-pointer"
-                title="Talk with Solas (Sanctuary AI)"
+            {/* Compact 2-Pill Nav on Standard Laptops / Zoomed Screens (1024px to 1535px) */}
+            <nav className="flex 2xl:hidden items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-2xl shadow-lg shadow-black/40">
+              <Link
+                href="/chronicles"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                <span>Let&apos;s Talk</span>
-              </button>
-            )}
+                <BookOpen className="w-3.5 h-3.5 text-amber-300" />
+                <span>Chronicles</span>
+              </Link>
 
-            <button
-              type="button"
-              onClick={onWander}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-indigo-200/90 hover:text-indigo-200 hover:bg-indigo-400/15 transition-all whitespace-nowrap shrink-0 cursor-pointer"
-              title="Wander to a random star"
-            >
-              <Compass className="w-3.5 h-3.5 text-indigo-300" />
-              <span>Wander</span>
-            </button>
-
-            <Link
-              href="/about"
-              className="px-3 py-1.5 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap shrink-0"
-            >
-              About
-            </Link>
-          </nav>
+              <Link
+                href="/library"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
+              >
+                <Bookmark className="w-3.5 h-3.5 text-amber-400" />
+                <span>Library</span>
+              </Link>
+            </nav>
+          </div>
 
           {/* Right Action Tools Cluster */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -320,11 +342,11 @@ export default function Header({
               <span>Release</span>
             </button>
 
-            {/* Mobile Sanctuary Menu Button (Accessible on all screens below xl) */}
+            {/* Mobile Sanctuary Menu Button (Accessible on all screens below 2xl) */}
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="xl:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-amber-400/35 bg-amber-400/10 hover:bg-amber-400/20 text-amber-200 hover:text-white transition-all backdrop-blur-xl cursor-pointer shadow-sm active:scale-95"
+              className="2xl:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-amber-400/35 bg-amber-400/10 hover:bg-amber-400/20 text-amber-200 hover:text-white transition-all backdrop-blur-xl cursor-pointer shadow-sm active:scale-95"
               title="Open Sanctuary Navigation Drawer"
             >
               <Menu className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" />
@@ -456,34 +478,36 @@ export default function Header({
           </div>
         )}
 
-        {/* Category Pills (Sub-Nav - Centered on Desktop) */}
-        <div className="pointer-events-auto flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 overflow-x-auto py-1 scrollbar-none w-full">
-          {CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-200 backdrop-blur-md border ${
-                  isSelected
-                    ? "bg-white/15 border-white/40 text-white shadow-md shadow-white/10"
-                    : "bg-black/40 border-white/10 text-white/50 hover:text-white/90 hover:bg-white/[0.08]"
-                }`}
-                style={
-                  isSelected && cat.id !== "all"
-                    ? {
-                        borderColor: `${cat.color}70`,
-                        backgroundColor: `${cat.color}20`,
-                        color: "#ffffff"
-                      }
-                    : {}
-                }
-              >
-                <span>{cat.icon}</span>
-                <span>{cat.label}</span>
-              </button>
-            );
-          })}
+        {/* Category Pills (Sub-Nav - Fluidly Centered, Never Clipped on Zoom) */}
+        <div className="pointer-events-auto w-full overflow-x-auto scrollbar-none py-1 px-1 flex justify-start lg:justify-center">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 px-2 sm:px-4 mx-auto">
+            {CATEGORIES.map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => onSelectCategory(cat.id)}
+                  className={`shrink-0 flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-medium tracking-wide transition-all duration-200 backdrop-blur-md border ${
+                    isSelected
+                      ? "bg-white/15 border-white/40 text-white shadow-md shadow-white/10"
+                      : "bg-black/40 border-white/10 text-white/50 hover:text-white/90 hover:bg-white/[0.08]"
+                  }`}
+                  style={
+                    isSelected && cat.id !== "all"
+                      ? {
+                          borderColor: `${cat.color}70`,
+                          backgroundColor: `${cat.color}20`,
+                          color: "#ffffff"
+                        }
+                      : {}
+                  }
+                >
+                  <span>{cat.icon}</span>
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Global Pulse Ticker (Flows naturally right below category pills with ZERO collision) */}
