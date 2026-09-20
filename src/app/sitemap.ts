@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { INITIAL_LETTERS } from "../lib/initialStars";
 import { CHRONICLES } from "../lib/chroniclesData";
+import { LIBRARY_BOOKS } from "../lib/library/libraryData";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.solashaven.com";
@@ -15,6 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/chronicles`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/library`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
@@ -59,6 +66,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
+  // Master Sanctuary Library Books
+  const libraryRoutes: MetadataRoute.Sitemap = LIBRARY_BOOKS.map((book) => ({
+    url: `${baseUrl}/library/${book.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.85,
+  }));
+
   // Individual Star Permalinks
   const starRoutes: MetadataRoute.Sitemap = INITIAL_LETTERS.map((star) => ({
     url: `${baseUrl}/letter/${star.id}`,
@@ -67,5 +82,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...chronicleRoutes, ...starRoutes];
+  return [...staticRoutes, ...chronicleRoutes, ...libraryRoutes, ...starRoutes];
 }

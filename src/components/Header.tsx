@@ -21,7 +21,8 @@ import {
   Flame,
   Moon,
   Menu,
-  ChevronRight
+  ChevronRight,
+  Bookmark
 } from "lucide-react";
 import { filterRegions, EarthRegion } from "../lib/countries";
 import { useSoulProfile, CELESTIAL_AVATARS } from "../lib/useSoulProfile";
@@ -175,6 +176,14 @@ export default function Header({
             >
               <BookOpen className="w-3.5 h-3.5 text-amber-300" />
               <span>Chronicles</span>
+            </Link>
+
+            <Link
+              href="/library"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap shrink-0"
+            >
+              <Bookmark className="w-3.5 h-3.5 text-amber-400" />
+              <span>Library</span>
             </Link>
 
             {onOpenVigil && (
@@ -610,6 +619,23 @@ export default function Header({
                   <div>
                     <div>The Living Chronicles</div>
                     <div className="text-[10px] text-white/40">52+ authentic human memoirs</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-white/40" />
+              </Link>
+
+              <Link
+                href="/library"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-400">
+                    <Bookmark className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div>The Sanctuary Library</div>
+                    <div className="text-[10px] text-white/40">Full public domain masterpieces</div>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-white/40" />
