@@ -14,6 +14,8 @@ html, body {
   background-color: #010103;
   color: #f4f4f5;
   font-family: var(--font-sans);
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @keyframes fadeIn {

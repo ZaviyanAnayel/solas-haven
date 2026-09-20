@@ -56,24 +56,11 @@ export default function UserProfileModal({
   const detectLocation = async () => {
     setIsDetectingLocation(true);
     try {
-      const res = await fetch("https://ipwho.is/", { cache: "no-store" });
+      const res = await fetch("/api/geo");
       if (res.ok) {
         const data = await res.json();
-        if (data && data.success && data.city && data.country) {
+        if (data && data.city && data.country && data.country !== "Earth") {
           const detected = `${data.city}, ${data.country}`;
-          setLocation(detected);
-          setIsDetectingLocation(false);
-          return detected;
-        }
-      }
-    } catch {}
-
-    try {
-      const res2 = await fetch("https://ipapi.co/json/", { cache: "no-store" });
-      if (res2.ok) {
-        const data2 = await res2.json();
-        if (data2 && data2.city && data2.country_name) {
-          const detected = `${data2.city}, ${data2.country_name}`;
           setLocation(detected);
           setIsDetectingLocation(false);
           return detected;
@@ -87,6 +74,8 @@ export default function UserProfileModal({
       const city = parts[parts.length - 1]?.replace(/_/g, " ");
       if (city) {
         setLocation(city);
+        setIsDetectingLocation(false);
+        return city;
       }
     } catch {}
 
@@ -127,12 +116,12 @@ export default function UserProfileModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-[70] pointer-events-auto flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl animate-fade-in overflow-y-auto">
-        <div className="relative w-full max-w-xl bg-[#09090e] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/90 my-8 pointer-events-auto">
+      <div className="fixed inset-0 z-[70] pointer-events-auto flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl animate-fade-in overflow-y-auto">
+        <div className="relative w-full max-w-xl bg-[#09090e] border border-white/10 rounded-3xl p-5 sm:p-8 shadow-2xl shadow-black/90 my-auto max-h-[90dvh] overflow-y-auto scrollbar-none pointer-events-auto">
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+            className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -175,7 +164,7 @@ export default function UserProfileModal({
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-3 text-xs font-mono">
+          <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-3 text-xs font-mono overflow-x-auto scrollbar-none">
             {[
               { id: "identity", label: "Soul Identity" },
               { id: "avatars", label: "Celestial Avatars" },
@@ -315,7 +304,7 @@ export default function UserProfileModal({
               </p>
 
               {/* Avatar Grid */}
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 {CELESTIAL_AVATARS.map((avatar) => {
                   const isSelected = selectedAvatarId === avatar.id && !customAvatarUrl;
                   return (
@@ -370,7 +359,7 @@ export default function UserProfileModal({
           {/* Tab 3: Daily Presence & Milestones */}
           {activeTab === "milestones" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-amber-500/[0.06] border border-amber-400/20 flex items-center justify-between">
+              <div className="p-4 rounded-2xl bg-amber-500/[0.06] border border-amber-400/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-1.5 text-xs text-amber-300 font-mono font-semibold">
                     <Flame className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />

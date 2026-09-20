@@ -81,15 +81,15 @@ export default function CelestialBlessingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl animate-fade-in">
-      <div className="relative w-full max-w-lg rounded-3xl border border-amber-400/30 bg-gradient-to-b from-neutral-900/95 via-neutral-950/95 to-black p-6 sm:p-9 shadow-2xl shadow-amber-500/20 text-white overflow-hidden text-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl animate-fade-in">
+      <div className="relative w-full max-w-lg rounded-3xl border border-amber-400/30 bg-gradient-to-b from-neutral-900/95 via-neutral-950/95 to-black p-5 sm:p-9 shadow-2xl shadow-amber-500/20 text-white overflow-hidden max-h-[90dvh] overflow-y-auto scrollbar-none text-center">
         {/* Luminous Heaven Background Glow */}
         <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-amber-400/15 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -right-20 w-60 h-60 rounded-full bg-purple-500/10 blur-3xl" />
 
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>

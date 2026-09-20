@@ -104,11 +104,11 @@ export default function ShareStoryModal({
 
   const handleAutoDetect = async () => {
     try {
-      const res = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+      const res = await fetch("/api/geo");
       if (res.ok) {
         const data = await res.json();
-        if (data.city && data.country_name) {
-          setLocationName(`${data.city}, ${data.country_name}`);
+        if (data.city && data.country && data.country !== "Earth") {
+          setLocationName(`${data.city}, ${data.country}`);
           return;
         }
       }

@@ -17,14 +17,14 @@ export default function AiFloatingOrb({ onOpenAi }: AiFloatingOrbProps) {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 pointer-events-auto flex items-center group">
+    <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-40 pointer-events-auto flex items-center group">
       {/* Interactive Floating AI Capsule */}
       <button
         type="button"
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="relative flex items-center gap-3 p-1.5 pr-4 sm:pr-5 rounded-full bg-gradient-to-r from-neutral-950/90 via-indigo-950/80 to-neutral-950/90 border border-amber-400/30 hover:border-amber-300/60 shadow-2xl shadow-amber-500/20 hover:shadow-amber-400/35 backdrop-blur-2xl transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+        className="relative flex items-center gap-3 p-1 sm:p-1.5 sm:pr-5 rounded-full bg-gradient-to-r from-neutral-950/90 via-indigo-950/80 to-neutral-950/90 border border-amber-400/30 hover:border-amber-300/60 shadow-2xl shadow-amber-500/20 hover:shadow-amber-400/35 backdrop-blur-2xl transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
         title="Let's Talk with Solas (Sanctuary AI Companion)"
       >
         {/* Breathing Starlight Ambient Glow Behind Orb */}
@@ -86,8 +86,14 @@ export default function AiFloatingOrb({ onOpenAi }: AiFloatingOrbProps) {
           <div className="absolute w-1.5 h-1.5 rounded-full bg-amber-200 shadow-[0_0_8px_#FDE68A] animate-[spin_4s_linear_infinite]" style={{ transformOrigin: "24px 24px" }} />
         </div>
 
-        {/* Text & Label: "✦ Let's Talk" */}
-        <div className="flex flex-col text-left pr-1 select-none">
+        {/* Mobile-Only Status Dot */}
+        <span className="sm:hidden absolute top-1 right-1 flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+        </span>
+
+        {/* Desktop Text & Label: "✦ Let's Talk" */}
+        <div className="hidden sm:flex flex-col text-left pr-1 select-none">
           <div className="flex items-center gap-1.5">
             <span className="text-xs sm:text-sm font-semibold font-serif tracking-wide text-white group-hover:text-amber-200 transition-colors">
               ✦ Let&apos;s Talk

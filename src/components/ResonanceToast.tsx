@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Sparkles, X, HeartHandshake } from "lucide-react";
@@ -30,7 +30,7 @@ export default function ResonanceToast({ category, onClose }: ResonanceToastProp
   if (!category) return null;
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-md animate-fade-in pointer-events-auto">
+    <div className="fixed bottom-24 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-md animate-fade-in pointer-events-auto">
       <div className="relative rounded-2xl border border-amber-400/30 bg-black/90 backdrop-blur-2xl p-4 sm:p-5 shadow-2xl shadow-amber-500/20 text-white overflow-hidden">
         {/* Ambient background glow */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />

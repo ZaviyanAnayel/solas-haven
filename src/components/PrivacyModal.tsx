@@ -12,14 +12,14 @@ export default function PrivacyModal({ isOpen, onClose }: PrivacyModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl animate-fade-in">
-      <div className="relative w-full max-w-lg rounded-3xl border border-amber-400/20 bg-neutral-950/95 p-6 sm:p-8 shadow-2xl shadow-amber-500/10 text-white overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl animate-fade-in">
+      <div className="relative w-full max-w-lg rounded-3xl border border-amber-400/20 bg-neutral-950/95 p-5 sm:p-8 shadow-2xl shadow-amber-500/10 text-white overflow-hidden max-h-[90dvh] overflow-y-auto scrollbar-none">
         {/* Background glow */}
         <div className="pointer-events-none absolute -top-32 -right-32 w-64 h-64 rounded-full bg-amber-500/10 blur-3xl" />
 
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
@@ -11,6 +11,14 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#000000",
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Solas Haven - The Celestial Sanctuary of Unspoken Words",
@@ -43,6 +51,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Script from "next/script";
+
 export default function RootLayout({
   children,
 }: {
@@ -57,9 +67,19 @@ export default function RootLayout({
         <meta name="google-site-verification" content="google042113ed54845edd" />
         <script
           async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="min-h-full flex flex-col font-sans selection:bg-amber-400/30 selection:text-amber-100 bg-black text-white">
+        {/* Google Analytics 4 */}
+        <Script
+          strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-KXYQTHGKCJ"
         />
-        <script
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -69,13 +89,7 @@ export default function RootLayout({
             `,
           }}
         />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3405098265613384"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body className="min-h-full flex flex-col font-sans selection:bg-amber-400/30 selection:text-amber-100 bg-black text-white">
+
         {children}
       </body>
     </html>

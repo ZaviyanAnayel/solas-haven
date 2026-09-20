@@ -57,6 +57,10 @@ export default function ConstellationCanvas({
   const targetCamRef = useRef<{ x: number; y: number; zoom: number } | null>(null);
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
+  const touchStartDistRef = useRef<number | null>(null);
+  const touchInitialZoomRef = useRef<number>(1);
+  const hasTouchMovedRef = useRef<boolean>(false);
   const bgStarsRef = useRef<BackgroundStar[]>([]);
   const shootingStarsRef = useRef<ShootingStar[]>([]);
   const animFrameRef = useRef<number | null>(null);
@@ -213,6 +217,83 @@ export default function ConstellationCanvas({
     const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
     const newZoom = Math.min(Math.max(cameraRef.current.zoom * zoomFactor, 0.4), 3.0);
     cameraRef.current.zoom = newZoom;
+  };
+
+  // Touch Handlers for Mobile Pan, Pinch-to-Zoom, and Tap
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    targetCamRef.current = null;
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+      dragStartRef.current = { x: touch.clientX, y: touch.clientY };
+      isDraggingRef.current = true;
+      hasTouchMovedRef.current = false;
+    } else if (e.touches.length === 2) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      touchStartDistRef.current = dist;
+      touchInitialZoomRef.current = cameraRef.current.zoom;
+      isDraggingRef.current = false;
+      hasTouchMovedRef.current = true;
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1 && isDraggingRef.current) {
+      const touch = e.touches[0];
+      const moveDist = touchStartPosRef.current
+        ? Math.hypot(touch.clientX - touchStartPosRef.current.x, touch.clientY - touchStartPosRef.current.y)
+        : 0;
+      if (moveDist > 6) {
+        hasTouchMovedRef.current = true;
+      }
+
+      const dx = (touch.clientX - dragStartRef.current.x) / cameraRef.current.zoom;
+      const dy = (touch.clientY - dragStartRef.current.y) / cameraRef.current.zoom;
+      cameraRef.current.x += dx;
+      cameraRef.current.y += dy;
+      dragStartRef.current = { x: touch.clientX, y: touch.clientY };
+    } else if (e.touches.length === 2 && touchStartDistRef.current) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const currDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      if (touchStartDistRef.current > 0) {
+        const ratio = currDist / touchStartDistRef.current;
+        const newZoom = Math.min(Math.max(touchInitialZoomRef.current * ratio, 0.4), 3.0);
+        cameraRef.current.zoom = newZoom;
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    // If finger lifted without significant drag, treat as precision mobile tap
+    if (!hasTouchMovedRef.current && touchStartPosRef.current) {
+      const tapX = touchStartPosRef.current.x;
+      const tapY = touchStartPosRef.current.y;
+      const world = screenToWorld(tapX, tapY);
+
+      // Generous 30px touch hit radius for mobile thumbs
+      for (const letter of filteredLetters) {
+        const dist = Math.hypot(world.x - letter.x, world.y - letter.y);
+        if (dist < letter.size * 6 + 30 / cameraRef.current.zoom) {
+          onSelectLetter(letter);
+          break;
+        }
+      }
+    }
+
+    if (e.touches.length === 0) {
+      isDraggingRef.current = false;
+      touchStartPosRef.current = null;
+      touchStartDistRef.current = null;
+      hasTouchMovedRef.current = false;
+    } else if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      dragStartRef.current = { x: touch.clientX, y: touch.clientY };
+      isDraggingRef.current = true;
+      touchStartDistRef.current = null;
+    }
   };
 
   // Main Render Loop
@@ -628,7 +709,12 @@ export default function ConstellationCanvas({
         onMouseUp={handleMouseUp}
         onClick={handleClick}
         onWheel={handleWheel}
-        className="w-full h-full block"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        className="w-full h-full block touch-none"
+        style={{ touchAction: "none" }}
       />
 
       {/* Floating Hover Whisper Tooltip */}
@@ -690,11 +776,17 @@ export default function ConstellationCanvas({
       )}
 
       {/* Bottom Subtle Navigation & Compliance */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 pointer-events-auto z-10">
-        <span className="pointer-events-none text-center text-[10px] sm:text-[11px] tracking-wider text-white/30 font-light">
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 pointer-events-auto z-10 w-full px-4">
+        {/* Mobile Minimal Touch Gesture Hint */}
+        <span className="sm:hidden pointer-events-none text-center text-[10px] tracking-widest text-white/30 font-mono">
+          DRAG SKY • PINCH ZOOM • TAP STAR
+        </span>
+
+        {/* Desktop Detailed Hint */}
+        <span className="hidden sm:inline pointer-events-none text-center text-[11px] tracking-wider text-white/30 font-light">
           DRAG TO EXPLORE COSMOS • SCROLL TO ZOOM • CLICK ANY STAR TO READ
         </span>
-        <div className="flex items-center gap-2.5 sm:gap-3 text-[10px] text-white/30 font-mono tracking-widest uppercase">
+        <div className="hidden sm:flex items-center gap-2.5 sm:gap-3 text-[10px] text-white/30 font-mono tracking-widest uppercase">
           <a href="/chronicles" className="hover:text-amber-300/90 transition-colors">
             Chronicles
           </a>

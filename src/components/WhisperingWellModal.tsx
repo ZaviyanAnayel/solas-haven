@@ -255,24 +255,25 @@ export default function WhisperingWellModal({
       {/* Modal Dialog Container - stops backdrop click propagation */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl h-[86vh] max-h-[720px] rounded-3xl border border-amber-400/25 bg-gradient-to-b from-[#0a0d14] via-[#06080e] to-black shadow-2xl shadow-indigo-950/40 flex flex-col overflow-hidden"
+        className="relative w-full max-w-2xl h-[90dvh] max-h-[720px] rounded-3xl border border-amber-400/25 bg-gradient-to-b from-[#0a0d14] via-[#06080e] to-black shadow-2xl shadow-indigo-950/40 flex flex-col overflow-hidden"
       >
         {/* Luminous Midnight Background Auras */}
         <div className="pointer-events-none absolute -top-40 -left-20 w-96 h-96 rounded-full bg-amber-400/10 blur-[100px]" />
         <div className="pointer-events-none absolute -bottom-40 -right-20 w-96 h-96 rounded-full bg-indigo-600/15 blur-[100px]" />
 
         {/* Modal Header (Always Pinned At Top with Prominent Back Button) */}
-        <header className="shrink-0 px-4 sm:px-5 py-3 border-b border-white/10 flex items-center justify-between bg-black/60 backdrop-blur-md z-20">
-          <div className="flex items-center gap-2.5 sm:gap-3">
+        <header className="shrink-0 px-3.5 sm:px-5 py-3 border-b border-white/10 flex items-center justify-between bg-black/60 backdrop-blur-md z-20">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Prominent Back Button */}
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-white/90 hover:text-white transition-all text-xs font-medium cursor-pointer shadow-sm active:scale-95 shrink-0"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-white/90 hover:text-white transition-all text-xs font-medium cursor-pointer shadow-sm active:scale-95 shrink-0"
               title="Return to the Constellation Sky (Esc)"
             >
               <ArrowLeft className="w-4 h-4 text-amber-300" />
-              <span className="font-serif">Back to Stars</span>
+              <span className="font-serif hidden sm:inline">Back to Stars</span>
+              <span className="font-serif sm:hidden">Back</span>
             </button>
 
             {/* Title & Status */}
@@ -488,9 +489,9 @@ export default function WhisperingWellModal({
             </button>
           </div>
 
-          <div className="mt-2 flex items-center justify-between text-[10px] text-white/35 px-1">
+          <div className="mt-2 flex flex-col sm:flex-row items-center justify-between text-[10px] text-white/35 px-1 gap-1 text-center sm:text-left">
             <span>Conversations are preserved on your device so you never lose them.</span>
-            <span>Solas Haven Sanctuary AI</span>
+            <span className="hidden sm:inline">Solas Haven Sanctuary AI</span>
           </div>
         </footer>
       </div>

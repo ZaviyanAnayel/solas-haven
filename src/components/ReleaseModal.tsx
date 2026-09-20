@@ -56,12 +56,12 @@ export default function ReleaseModal({
   const handleAutoDetect = async () => {
     setIsDetectingLocation(true);
     try {
-      // 1. Try public IP Geolocation API
-      const res = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+      // 1. Try internal Geo API (zero CORS errors)
+      const res = await fetch("/api/geo");
       if (res.ok) {
         const data = await res.json();
-        if (data.city && data.country_name) {
-          setLocationName(`${data.city}, ${data.country_name}`);
+        if (data.city && data.country && data.country !== "Earth") {
+          setLocationName(`${data.city}, ${data.country}`);
           setIsDetectingLocation(false);
           return;
         }
@@ -70,20 +70,7 @@ export default function ReleaseModal({
       // Fallback
     }
 
-    // 2. Fallback to freeipapi
-    try {
-      const res2 = await fetch("https://freeipapi.com/api/json", { cache: "no-store" });
-      if (res2.ok) {
-        const data2 = await res2.json();
-        if (data2.cityName && data2.countryName) {
-          setLocationName(`${data2.cityName}, ${data2.countryName}`);
-          setIsDetectingLocation(false);
-          return;
-        }
-      }
-    } catch {
-      // Fallback
-    }
+
 
     // 3. Fallback to device timezone
     try {
@@ -246,20 +233,20 @@ export default function ReleaseModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-2xl animate-fade-in">
-      <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-neutral-950/90 p-6 sm:p-8 shadow-2xl shadow-amber-500/10 text-white overflow-hidden max-h-[90vh] overflow-y-auto scrollbar-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-2xl animate-fade-in">
+      <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-neutral-950/90 p-5 sm:p-8 shadow-2xl shadow-amber-500/10 text-white overflow-hidden max-h-[90dvh] overflow-y-auto scrollbar-none">
         <div className="pointer-events-none absolute -top-32 -left-32 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -right-32 w-72 h-72 rounded-full bg-sky-500/10 blur-3xl" />
 
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-mono mb-3">
+        <div className="mb-5 sm:mb-6 pr-8 sm:pr-0">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-mono mb-2.5 sm:mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             <span>THE ALTAR OF RELEASING</span>
           </div>
@@ -558,7 +545,7 @@ export default function ReleaseModal({
             </button>
 
             {/* Sacred WhatsApp-Style Privacy Guarantee Badge */}
-            <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-emerald-400/80 font-mono tracking-tight">
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-emerald-400/80 font-mono tracking-tight text-center">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>100% Anonymous • Zero Data Stored • End-to-End Detached</span>
             </div>

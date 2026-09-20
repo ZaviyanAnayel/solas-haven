@@ -19,7 +19,9 @@ import {
   ChevronDown,
   Wind,
   Flame,
-  Moon
+  Moon,
+  Menu,
+  ChevronRight
 } from "lucide-react";
 import { filterRegions, EarthRegion } from "../lib/countries";
 import { useSoulProfile, CELESTIAL_AVATARS } from "../lib/useSoulProfile";
@@ -64,6 +66,7 @@ export default function Header({
 }: HeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [localCountry, setLocalCountry] = useState<string>("");
   const { profile } = useSoulProfile();
   const currentAvatar =
@@ -81,12 +84,12 @@ export default function Header({
       }
     } catch {}
 
-    // Lightweight async IP check for exact country name
-    fetch("https://ipapi.co/json/", { cache: "no-store" })
+    // Lightweight async check for exact country name via internal API (zero CORS errors)
+    fetch("/api/geo")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data && data.country_name) {
-          setLocalCountry(data.country_name);
+        if (data && data.country && data.country !== "Earth") {
+          setLocalCountry(data.country);
         }
       })
       .catch(() => {});
@@ -231,10 +234,10 @@ export default function Header({
           {/* Right Action Tools Cluster */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
-            {/* Earth Search Toggle */}
+            {/* Earth Search Toggle (Desktop only, available in mobile menu) */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className={`p-2 rounded-full border text-xs transition-all backdrop-blur-xl cursor-pointer ${
+              className={`hidden sm:flex p-2 rounded-full border text-xs transition-all backdrop-blur-xl cursor-pointer ${
                 isSearchOpen || searchLocation
                   ? "bg-amber-400/20 border-amber-400/50 text-amber-200 shadow-md shadow-amber-400/20"
                   : "bg-white/5 hover:bg-white/10 border-white/10 text-white/70 hover:text-white"
@@ -248,35 +251,35 @@ export default function Header({
             <button
               onClick={onToggleAudio}
               title={isAudioPlaying ? "Mute ambient audio" : "Play 432Hz ambient frequency"}
-              className={`p-2 rounded-full border transition-all duration-300 backdrop-blur-xl ${
+              className={`p-1.5 sm:p-2 rounded-full border transition-all duration-300 backdrop-blur-xl cursor-pointer ${
                 isAudioPlaying
                   ? "bg-amber-500/20 border-amber-400/50 text-amber-300 shadow-md shadow-amber-500/20"
                   : "bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10"
               }`}
             >
               {isAudioPlaying ? (
-                <Volume2 className="w-4 h-4 text-amber-300" />
+                <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" />
               ) : (
-                <VolumeX className="w-4 h-4" />
+                <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               )}
             </button>
 
-            {/* User Stars Locator */}
+            {/* User Stars Locator (Desktop only, accessible in drawer) */}
             {userStarsCount > 0 && (
               <button
                 onClick={onFocusMyStar}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-400/15 border border-amber-400/40 text-amber-300 hover:bg-amber-400/25 transition-all text-xs font-medium"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-amber-400/15 border border-amber-400/40 text-amber-300 hover:bg-amber-400/25 transition-all text-xs font-medium cursor-pointer"
                 title="Locate your stars"
               >
                 <Star className="w-3.5 h-3.5 fill-amber-300" />
-                <span className="hidden sm:inline">{userStarsCount}</span>
+                <span>{userStarsCount}</span>
               </button>
             )}
 
-            {/* Soul Profile Pill */}
+            {/* Soul Profile Pill (Desktop only, prominent in mobile menu drawer) */}
             <button
               onClick={onOpenProfile}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-amber-400/40 text-white transition-all text-xs font-medium shadow-sm"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-amber-400/40 text-white transition-all text-xs font-medium shadow-sm cursor-pointer"
               title="Your Profile & Starlight Milestones"
             >
               <div
@@ -292,7 +295,7 @@ export default function Header({
                   <Sparkles className="w-3 h-3 text-white" />
                 )}
               </div>
-              <span className="hidden sm:inline font-serif">{profile.name}</span>
+              <span className="font-serif">{profile.name}</span>
               <span className="px-1.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-mono flex items-center gap-0.5 font-semibold">
                 <Flame className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
                 <span>{profile.streak}d</span>
@@ -302,10 +305,21 @@ export default function Header({
             {/* Primary Action: Release a Star */}
             <button
               onClick={onOpenReleaseModal}
-              className="group relative inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 text-neutral-950 font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-amber-300/20 hover:shadow-amber-300/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+              className="group relative inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 text-neutral-950 font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-amber-300/20 hover:shadow-amber-300/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
             >
-              <Feather className="w-3.5 h-3.5 transition-transform group-hover:-rotate-12" />
+              <Feather className="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform group-hover:-rotate-12" />
               <span>Release</span>
+            </button>
+
+            {/* Mobile Sanctuary Menu Button (Accessible on all screens below xl) */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="xl:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-amber-400/35 bg-amber-400/10 hover:bg-amber-400/20 text-amber-200 hover:text-white transition-all backdrop-blur-xl cursor-pointer shadow-sm active:scale-95"
+              title="Open Sanctuary Navigation Drawer"
+            >
+              <Menu className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" />
+              <span className="text-xs font-serif font-medium">Menu</span>
             </button>
           </div>
         </div>
@@ -466,6 +480,291 @@ export default function Header({
         {/* Global Pulse Ticker (Flows naturally right below category pills with ZERO collision) */}
         <GlobalPulse />
       </div>
+
+      {/* Mobile Sanctuary Drawer (Full Touch-Screen Navigation) */}
+      {isMobileMenuOpen && (
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 z-50 pointer-events-auto flex justify-end bg-black/80 backdrop-blur-xl animate-fade-in"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm h-full bg-[#07080f]/95 border-l border-white/10 p-5 sm:p-6 flex flex-col shadow-2xl overflow-y-auto"
+          >
+            {/* Drawer Top Bar */}
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-amber-400/15 border border-amber-300/30 text-amber-300">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-sm tracking-wider uppercase text-white/95">
+                    Sanctuary Compass
+                  </h3>
+                  <p className="text-[10px] text-white/40 font-mono">Mobile Navigation</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Soul Profile Card in Drawer */}
+            <div className="my-4 p-3.5 rounded-2xl bg-white/[0.03] border border-amber-400/25 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-10 h-10 rounded-full bg-gradient-to-tr ${currentAvatar.gradient} p-0.5 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-md`}
+                >
+                  {profile.customAvatarUrl ? (
+                    <img
+                      src={profile.customAvatarUrl}
+                      alt={profile.name}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <Sparkles className="w-4 h-4 text-white" />
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-sm font-serif font-medium text-white">{profile.name}</h4>
+                  <div className="flex items-center gap-1 text-[11px] text-amber-300 font-mono mt-0.5">
+                    <Flame className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span>Day {profile.streak} of Presence</span>
+                  </div>
+                </div>
+              </div>
+
+              {onOpenProfile && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onOpenProfile();
+                  }}
+                  className="px-3 py-1.5 rounded-full bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 text-amber-200 text-xs font-medium transition-all"
+                >
+                  Profile
+                </button>
+              )}
+            </div>
+
+            {/* Mobile World Region Search inside Drawer */}
+            <div className="relative mb-3">
+              <Search className="w-4 h-4 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchLocation}
+                onChange={(e) => onSearchLocationChange(e.target.value)}
+                placeholder="Search stars by country or ocean..."
+                className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-xs text-white placeholder-white/40 focus:outline-none focus:border-amber-400/50 transition-all"
+              />
+              {searchLocation && (
+                <button
+                  type="button"
+                  onClick={() => onSearchLocationChange("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Locate My Stars if user has released any */}
+            {userStarsCount > 0 && onFocusMyStar && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onFocusMyStar();
+                }}
+                className="flex items-center justify-between p-3 mb-3 rounded-xl bg-amber-400/10 hover:bg-amber-400/15 border border-amber-400/30 text-amber-200 text-sm font-medium transition-all text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300">
+                    <Star className="w-4 h-4 fill-amber-300" />
+                  </div>
+                  <div>
+                    <div>Locate My Stars ({userStarsCount})</div>
+                    <div className="text-[10px] text-amber-300/70">Jump to your star in the sky</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-amber-300/60" />
+              </button>
+            )}
+
+            {/* Navigation Links */}
+            <nav className="flex flex-col gap-1.5 flex-1">
+              <Link
+                href="/chronicles"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center text-amber-300">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div>The Living Chronicles</div>
+                    <div className="text-[10px] text-white/40">52+ authentic human memoirs</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-white/40" />
+              </Link>
+
+              {onOpenVigil && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onOpenVigil();
+                  }}
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-400">
+                      <Flame className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div>Global Silent Vigil</div>
+                      <div className="text-[10px] text-white/40">Join worldwide collective presence</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-white/40" />
+                </button>
+              )}
+
+              {onOpenBreath && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onOpenBreath();
+                  }}
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-sky-500/15 flex items-center justify-center text-sky-300">
+                      <Wind className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div>Somatic Grounding Breath</div>
+                      <div className="text-[10px] text-white/40">4-7-8 calming rhythm</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-white/40" />
+                </button>
+              )}
+
+              {onOpenWell && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onOpenWell();
+                  }}
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center text-indigo-300">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div>Let&apos;s Talk with Solas</div>
+                      <div className="text-[10px] text-white/40">Sanctuary AI Companion</div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-white/40" />
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onWander();
+                }}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-300">
+                    <Compass className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div>Wander the Sky</div>
+                    <div className="text-[10px] text-white/40">Glide to a random star</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-white/40" />
+              </button>
+
+              <Link
+                href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 text-white/90 text-sm font-medium transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center text-neutral-300">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div>About Solas Haven</div>
+                    <div className="text-[10px] text-white/40">Sanctuary ethos & creator</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-white/40" />
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenPrivacyModal();
+                }}
+                className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 text-emerald-300 text-sm font-medium transition-all text-left mt-2"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div>100% Anonymous Guarantee</div>
+                    <div className="text-[10px] text-emerald-400/70">Zero tracking, zero surveillance</div>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-emerald-400/50" />
+              </button>
+            </nav>
+
+            {/* Bottom Quick Action in Drawer */}
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenReleaseModal();
+                }}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 text-neutral-950 font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-300/20 active:scale-[0.98] transition-all"
+              >
+                <Feather className="w-4 h-4" />
+                <span>Leave a Star in Eternity</span>
+              </button>
+
+              {/* Drawer Legal Footer Links */}
+              <div className="mt-4 flex items-center justify-center gap-3 text-[11px] text-white/40 font-mono">
+                <Link href="/privacy" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-300 transition-colors">Privacy</Link>
+                <span>•</span>
+                <Link href="/terms" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-300 transition-colors">Terms</Link>
+                <span>•</span>
+                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-amber-300 transition-colors">Contact</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

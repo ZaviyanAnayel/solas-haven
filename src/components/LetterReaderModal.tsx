@@ -174,7 +174,7 @@ export default function LetterReaderModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl animate-fade-in">
-      <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-gradient-to-b from-neutral-900/95 via-neutral-950/95 to-black p-5 sm:p-8 shadow-2xl shadow-black text-white overflow-hidden max-h-[92vh] overflow-y-auto scrollbar-none">
+      <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-gradient-to-b from-neutral-900/95 via-neutral-950/95 to-black p-5 sm:p-8 shadow-2xl shadow-black text-white overflow-hidden max-h-[92dvh] overflow-y-auto scrollbar-none">
         {/* Constellation Hue */}
         <div
           className="pointer-events-none absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl opacity-20"
@@ -289,11 +289,11 @@ export default function LetterReaderModal({
         })()}
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between py-3 border-y border-white/10 my-4">
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 py-3 border-y border-white/10 my-4">
           <div className="flex items-center gap-2">
             <button
               onClick={handleLightClick}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 text-xs font-medium ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 text-xs font-medium cursor-pointer ${
                 hasSentLight
                   ? "bg-rose-500/20 border-rose-400/50 text-rose-300 shadow-lg shadow-rose-500/20 scale-105"
                   : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:text-white active:scale-95"
@@ -537,19 +537,19 @@ export default function LetterReaderModal({
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={whisperText}
                     onChange={(e) => setWhisperText(e.target.value)}
                     placeholder="Type words, or tap '✦ AI Craft Whisper' above for instant solace..."
                     maxLength={180}
-                    className="flex-1 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-400/50"
+                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-400/50"
                   />
                   <button
                     type="submit"
                     disabled={!whisperText.trim() || isWeavingWhisper}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 text-neutral-950 font-semibold text-xs flex items-center gap-1.5 hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md shadow-amber-400/20 shrink-0 cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 text-neutral-950 font-semibold text-xs flex items-center justify-center gap-1.5 hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md shadow-amber-400/20 shrink-0 cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Send Prayer 🕊️</span>
