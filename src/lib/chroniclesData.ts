@@ -1,4 +1,5 @@
 import { ChronicleArticle } from "./chronicles/types";
+import { SEO_GENERATED_STORIES } from "./chronicles/seoGeneratedStories";
 import { GRIEF_STORIES } from "./chronicles/griefStories";
 import { LOVE_STORIES } from "./chronicles/loveStories";
 import { PRAYER_STORIES } from "./chronicles/prayerStories";
@@ -10,6 +11,7 @@ import { ENCOUNTER_STORIES } from "./chronicles/encounterStories";
 export type { ChronicleArticle };
 
 export const CHRONICLES: ChronicleArticle[] = [
+  ...SEO_GENERATED_STORIES,
   ...GRIEF_STORIES,
   ...LOVE_STORIES,
   ...PRAYER_STORIES,
