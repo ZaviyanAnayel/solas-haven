@@ -1,0 +1,19 @@
+# Solas Haven — The Celestial Sanctuary of Unspoken Words & Silent Prayers
+> A sacred, anonymous digital sanctuary where unspoken grief, unsaid goodbyes, secret confessions, and silent prayers ascend into permanent starlight across 195+ nations.
+
+## Core Features & Architecture
+- **Interactive 3D Celestial Cosmos**: Fully real-time Three.js starlight canvas visualizing thousands of human souls and prayers.
+- **Anonymous Letters & Silent Prayers**: Users can compose and release letters to heaven, deceased loved ones, unrequited love, and silent prayers anonymously.
+- **Whispers & Blessings**: Community members can send gentle starlight pulses ("Whispers of Solace") to uplift others.
+- **Celestial Library**: Curated timeless literature on healing, grief, solace, and spiritual renewal.
+- **432Hz Soundscapes**: Embedded ambient harmonic resonance engineered for vagus nerve relaxation and anxiety relief.
+- **Zero-Data Mining & Absolute Privacy**: Strictly privacy-first. No tracking, no behavioral ad profiling, 100% confidential.
+
+## Canonical URLs
+- Home: https://www.solashaven.com/
+- Celestial Library: https://www.solashaven.com/library
+- Solace Chronicles: https://www.solashaven.com/chronicles
+- Frequently Asked Questions: https://www.solashaven.com/faq
+- Privacy Policy: https://www.solashaven.com/privacy
+- Terms of Sanctuary: https://www.solashaven.com/terms
+- Contact & Pastoral Outreach: https://www.solashaven.com/contact
